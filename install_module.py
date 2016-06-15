@@ -1,16 +1,21 @@
-import erppeek
+from odoo_connect import client
 
 
-module_to_install = 'sale'
+def install_module(module_to_install='base_import_module'):
 
-client = erppeek.Client('http://localhost:8069', 'odoo_with_pad', 'pad@mail.ru', 'padznich')
+    if module_to_install in client.modules('')['uninstalled']:
 
-if module_to_install in client.modules('')['uninstalled']:
+        print("Checked module in uninstalled")
 
-    print("Checked module in uninstalled")
+        client.install(module_to_install)
 
-    client.install(module_to_install)
+        if module_to_install in client.modules('')['installed']:
 
-    if module_to_install in client.modules('')['installed']:
+            print("Module \"{}\" successfully installed".format(module_to_install))
 
-        print("Module \"{}\" successfully installed".format(module_to_install))
+    proxy = client.model('ir.module.module')
+    proxy.update_list()
+
+if __name__ == "__main__":
+
+    install_module()
